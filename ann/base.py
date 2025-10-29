@@ -3,11 +3,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Optional, Tuple
 
-try:
-    import torch
-except Exception as e:  # pragma: no cover - makes errors clearer if torch missing
-    raise RuntimeError("This package requires PyTorch. Please install torch first: pip install torch") from e
-
+import torch
 
 @dataclass
 class SearchResult:

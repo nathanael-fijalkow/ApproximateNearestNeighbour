@@ -9,8 +9,13 @@ def _kmeans_1d(x: torch.Tensor, k: int, n_iter: int = 25, seed: int = 42) -> tor
     """K-means on a subspace (d_sub,). Returns centroids of shape (k, d_sub)."""
     n, d_sub = x.shape
     g = torch.Generator(device=x.device).manual_seed(seed)
-    perm = torch.randperm(n, generator=g, device=x.device)
-    centroids = x[perm[:k]].clone()
+    # Initialize centroids. If k > n, sample with replacement to get k initial centers.
+    if n >= k:
+        perm = torch.randperm(n, generator=g, device=x.device)
+        centroids = x[perm[:k]].clone()
+    else:
+        idx = torch.randint(0, n, (k,), generator=g, device=x.device)
+        centroids = x[idx].clone()
     
     for _ in range(n_iter):
         # assign
